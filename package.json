@@ -1,0 +1,28 @@
+{
+	"name": "minimal-halogen-ps",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"directories": {
+		"test": "test"
+	},
+	"scripts": {
+		"watch": "spago bundle-app -w -m Main -t assets/index.js",
+		"serve": "parcel serve assets/index.html --open",
+		"test": "spago test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mrsekut/minimal-halogen-ps.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/mrsekut/minimal-halogen-ps/issues"
+	},
+	"homepage": "https://github.com/mrsekut/minimal-halogen-ps#readme",
+	"devDependencies": {
+		"parcel": "^2.0.0-rc.0"
+	}
+}

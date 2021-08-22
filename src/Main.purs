@@ -4,7 +4,6 @@ import Prelude
 
 import Control.Monad.State (get, put)
 import Data.Const (Const)
-import Data.Maybe (Maybe(..))
 
 import Effect (Effect)
 import Effect.Aff (Aff)
@@ -19,7 +18,7 @@ import Halogen.VDom.Driver (runUI)
 
 -- | Store
 
-store :: H.Component HH.HTML (Const Void) Unit Void Aff
+store :: H.Component (Const Void) Unit Void Aff
 store =
   H.mkComponent
     { initialState: const false
@@ -47,7 +46,7 @@ reducer = case _ of
 toggleButton :: State -> H.ComponentHTML Action () Aff
 toggleButton isOn =
     HH.button
-      [ HE.onClick \_ -> Just Toggle ]
+      [ HE.onClick \_ -> Toggle ]
       [ HH.text $ "The button is " <> if isOn then "ON" else "OFF" ]
 
 
