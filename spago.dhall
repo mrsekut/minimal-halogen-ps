@@ -10,7 +10,9 @@ You can edit this file as you like.
   , "effect"
   , "halogen"
   , "prelude"
+  , "profunctor-lenses"
   , "psci-support"
+  , "routing-duplex"
   , "transformers"
   ]
 , packages = ./packages.dhall
