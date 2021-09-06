@@ -9,9 +9,12 @@ You can edit this file as you like.
   , "const"
   , "effect"
   , "halogen"
+  , "halogen-store"
+  , "newtype"
   , "prelude"
   , "profunctor-lenses"
   , "psci-support"
+  , "routing"
   , "routing-duplex"
   , "transformers"
   ]
