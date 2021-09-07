@@ -3,11 +3,12 @@ module MiniHalo.Data.Route (Route(..), route) where
 import Prelude
 
 import Data.Generic.Rep (class Generic)
-import Data.Lens.Iso.Newtype (_Newtype)
-import Data.Newtype (class Newtype)
 import Data.Show.Generic (genericShow)
-import Routing.Duplex (RouteDuplex', root, segment)
+import MiniHalo.Data.Username (Username)
+import Routing.Duplex (RouteDuplex', segment, root)
+import Data.Lens.Iso.Newtype (_Newtype)
 import Routing.Duplex.Generic as G
+import Routing.Duplex.Generic.Syntax ((/))
 
 
 
@@ -15,8 +16,8 @@ import Routing.Duplex.Generic as G
 
 data Route
   = Home
-  -- | Feed
-  -- | Profile Username
+  | Feed
+  | Profile Username
 
 derive instance Eq Route
 derive instance Ord Route
@@ -31,21 +32,9 @@ instance Show Route where
 route :: RouteDuplex' Route
 route = root $ G.sum
   { "Home": G.noArgs
-  -- , "Feed": "feed" / G.noArgs
-  -- , "Profile": "user" / username
+  , "Feed": "feed" / G.noArgs
+  , "Profile": "user" / username
   }
-
-
-
--- Username
-
-newtype Username
-  = Username String
-
-derive instance Newtype Username _
-
-instance Show Username where
-  show (Username user) = user
 
 
 username :: RouteDuplex' Username

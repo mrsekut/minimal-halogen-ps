@@ -14,7 +14,9 @@ import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 import MiniHalo.Page.Home as Home
--- import Page.Register as Register
+import MiniHalo.Page.Feed as Feed
+import MiniHalo.Page.Profile as Profile
+import MiniHalo.Data.Username (mkUsername)
 import Web.Event.Event (preventDefault)
 import Web.UIEvent.MouseEvent (toEvent, MouseEvent)
 
@@ -30,8 +32,8 @@ data Action
 
 type ChildSlots =
   ( home :: Home.Slot Unit
-  -- , feed :: Register.Slot Unit
-  -- , profile :: Register.Slot Unit
+  , feed :: Feed.Slot Unit
+  , profile :: Profile.Slot Unit
   )
 
 component
@@ -55,7 +57,8 @@ render st = navbar $ case st.route of
   Nothing -> HH.h1_ [ HH.text "Oh no! That page wasn't found" ]
   Just route -> case route of
     Home -> HH.slot Home._home unit Home.component unit absurd
-    -- Register -> HH.slot Register._register unit Register.component unit absurd
+    Feed -> HH.slot Feed._feed unit Feed.component unit absurd
+    Profile username -> HH.slot Profile._profile unit Profile.component unit absurd
 
 
 handleAction
@@ -78,9 +81,9 @@ handleQuery :: ∀ a o m. Query a -> H.HalogenM State Action ChildSlots o m ( Ma
 handleQuery = case _ of
   Navigate route a -> do
     mRoute <- H.gets _.route
-    when ( mRoute /= Just route ) $
+    when (mRoute /= Just route) $
       H.modify_ _ { route = Just route }
-    pure ( Just a )
+    pure $ Just a
 
 
 
@@ -89,18 +92,25 @@ navbar html =
   HH.div_
   [ HH.ul_
     [ HH.li_
-      -- [ HH.a
-      --   [ HP.href "#"
-      --   , HE.onClick ( GoTo RSSList )
-      --   ]
-      --   [ HH.text "RSSList" ]
-      -- ]
-    -- , HH.li_
       [ HH.a
         [ HP.href "#"
-        , HE.onClick (  GoTo Home )
+        , HE.onClick (GoTo Home)
         ]
         [ HH.text "home" ]
+      ]
+    , HH.li_
+      [ HH.a
+        [ HP.href "#/feed"
+        , HE.onClick (GoTo Feed)
+        ]
+        [ HH.text "feed" ]
+      ]
+    , HH.li_
+      [ HH.a
+        [ HP.href "#/user/mrsekut"
+        , HE.onClick (GoTo $ Profile $ mkUsername "mrsekut")
+        ]
+        [ HH.text "profile" ]
       ]
     ]
   ,  html
