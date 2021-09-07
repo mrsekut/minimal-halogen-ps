@@ -1,60 +1,38 @@
-module Main where
+module MiniHalo.Main where
 
 import Prelude
 
-import Control.Monad.State (get, put)
-import Data.Const (Const)
-
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
-import Effect.Aff (Aff)
-
+import Effect.Aff (launchAff_)
+import Effect.Class (liftEffect)
+import Effect.Class.Console (log)
 import Halogen as H
-import Halogen.Aff (awaitBody, runHalogenAff)
-import Halogen.HTML as HH
-import Halogen.HTML.Events as HE
+import Halogen.Aff as HA
 import Halogen.VDom.Driver (runUI)
+import MiniHalo.AppM (runAppM)
+import MiniHalo.Component.Router as Router
+import MiniHalo.Data.Route (route)
+import MiniHalo.Store (LogLevel(..), Store)
+import Routing.Duplex (parse)
+import Routing.Hash (matchesWith)
 
 
-
--- | Store
-
-store :: H.Component (Const Void) Unit Void Aff
-store =
-  H.mkComponent
-    { initialState: const false
-    , render: toggleButton
-    , eval: H.mkEval $ H.defaultEval { handleAction = reducer }
-    }
-
-
-
--- | Modules
-
-data Action = Toggle
-type State = Boolean
-
-reducer :: Action -> H.HalogenM State Action () Void Aff Unit
-reducer = case _ of
-  Toggle -> do
-    old <- get
-    put $ not old
-
-
-
--- | Components
-
-toggleButton :: State -> H.ComponentHTML Action () Aff
-toggleButton isOn =
-    HH.button
-      [ HE.onClick \_ -> Toggle ]
-      [ HH.text $ "The button is " <> if isOn then "ON" else "OFF" ]
-
-
-
--- | main
 
 main :: Effect Unit
-main =
-  runHalogenAff do
-    body <- awaitBody
-    runUI store unit body
+main = HA.runHalogenAff do
+  body <- HA.awaitBody
+  let
+    logLevel = Dev
+
+  let
+    initialStore :: Store
+    initialStore = { logLevel }
+
+  rootComponent <- runAppM initialStore Router.component
+  halogenIO <- runUI rootComponent unit body
+  void $ liftEffect $ matchesWith ( parse route ) \mOld new ->
+    when ( mOld /= Just new ) do
+      log $ show new
+      launchAff_ $ halogenIO.query $ H.mkTell $ Router.Navigate new
+  pure unit

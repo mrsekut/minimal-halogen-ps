@@ -7,7 +7,7 @@
 		"test": "test"
 	},
 	"scripts": {
-		"watch": "spago bundle-app -w -m Main -t assets/index.js",
+		"watch": "spago bundle-app -w -m MiniHalo.Main -t assets/index.js",
 		"serve": "parcel serve assets/index.html --open",
 		"test": "spago test"
 	},
