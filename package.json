@@ -23,6 +23,6 @@
 	},
 	"homepage": "https://github.com/mrsekut/minimal-halogen-ps#readme",
 	"devDependencies": {
-		"parcel": "^2.0.0-rc.0"
+		"parcel": "^2.8.2"
 	}
 }
